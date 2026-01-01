@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useUser } from '@/context/UserContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { User, Mail, Briefcase, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

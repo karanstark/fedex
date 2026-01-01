@@ -5,6 +5,7 @@ interface User {
     email: string;
     full_name: string;
     role: string;
+    created_at?: string;
 }
 
 interface UserContextType {

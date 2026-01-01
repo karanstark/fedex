@@ -67,6 +67,10 @@ class UserResponse(UserBase):
     class Config:
         from_attributes = True
 
+class UserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[str] = None
+
 class Token(BaseModel):
     access_token: str
     token_type: str

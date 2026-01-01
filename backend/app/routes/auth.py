@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from ..database import get_db, User
-from ..models import UserCreate, UserResponse, Token, TokenData
+from ..models import UserCreate, UserResponse, Token, TokenData, UserUpdate
 
 # Configuration
 SECRET_KEY = "fedex_super_secret_hackathon_key"  # In production, use env var
@@ -89,4 +89,19 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
 
 @router.get("/api/users/me", response_model=UserResponse)
 def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+@router.put("/api/users/me", response_model=UserResponse)
+def update_user_me(user_update: UserUpdate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    if user_update.full_name is not None:
+        current_user.full_name = user_update.full_name
+    if user_update.email is not None:
+        # Check if email is already taken if changing
+        if user_update.email != current_user.email:
+            db_user = db.query(User).filter(User.email == user_update.email).first()
+            if db_user:
+                raise HTTPException(status_code=400, detail="Email already registered")
+            current_user.email = user_update.email
+    db.commit()
+    db.refresh(current_user)
     return current_user

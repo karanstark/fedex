@@ -1,10 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useUser } from '@/context/UserContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Bell, Shield, User, Moon, Sun } from 'lucide-react';
 
 const SettingsPage: React.FC = () => {
     const [notifications, setNotifications] = useState(true);
+    const { user, updateUser } = useUser();
+    const [displayName, setDisplayName] = useState(user?.full_name || '');
+    const [updating, setUpdating] = useState(false);
+    const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+    useEffect(() => {
+        if (user) {
+            setDisplayName(user.full_name);
+        }
+    }, [user]);
+
+    const handleUpdateProfile = async () => {
+        setUpdating(true);
+        setMessage(null);
+        try {
+            await updateUser({ full_name: displayName });
+            setMessage({ type: 'success', text: 'Profile updated successfully!' });
+        } catch (error: any) {
+            setMessage({ type: 'error', text: error.message || 'Failed to update profile' });
+        } finally {
+            setUpdating(false);
+        }
+    };
+
     // Initialize dark mode from localStorage or system preference
     const [darkMode, setDarkMode] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -48,21 +73,35 @@ const SettingsPage: React.FC = () => {
                                 <label className="text-sm font-medium">Display Name</label>
                                 <input
                                     type="text"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700"
-                                    defaultValue="Admin User"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-purple-600 outline-none"
+                                    value={displayName}
+                                    onChange={(e) => setDisplayName(e.target.value)}
+                                    placeholder="Enter your name"
                                 />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Email Address</label>
                                 <input
                                     type="email"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700"
-                                    defaultValue="abc@gmail.com"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 opacity-60 cursor-not-allowed"
+                                    defaultValue={user?.email || "abc@gmail.com"}
                                     disabled
                                 />
                             </div>
                         </div>
-                        <Button variant="outline" className="mt-2">Update Profile</Button>
+                        {message && (
+                            <div className={`text-sm p-3 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
+                                {message.text}
+                            </div>
+                        )}
+                        <Button
+                            variant="default"
+                            className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                            onClick={handleUpdateProfile}
+                            disabled={updating}
+                        >
+                            {updating ? 'Updating...' : 'Update Profile'}
+                        </Button>
                     </CardContent>
                 </Card>
 

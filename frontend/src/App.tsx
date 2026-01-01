@@ -8,55 +8,58 @@ import RegisterPage from './components/RegisterPage';
 import ProfilePage from './components/ProfilePage';
 import CreateCasePage from './components/CreateCasePage';
 import SettingsPage from './components/SettingsPage';
+import { UserProvider } from './context/UserContext';
 import './index.css';
 
 function App() {
     return (
-        <Router>
-            <Routes>
-                {/* Landing Page */}
-                <Route path="/" element={<ParticleHero />} />
+        <UserProvider>
+            <Router>
+                <Routes>
+                    {/* Landing Page */}
+                    <Route path="/" element={<ParticleHero />} />
 
-                {/* Authentication */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                    {/* Authentication */}
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
 
-                {/* Dashboard Routes */}
-                <Route path="/dashboard" element={
-                    <DashboardLayout>
-                        <AnalyticsDashboard />
-                    </DashboardLayout>
-                } />
-                <Route path="/cases" element={
-                    <DashboardLayout>
-                        <CaseManagement />
-                    </DashboardLayout>
-                } />
-                <Route path="/cases/new" element={
-                    <DashboardLayout>
-                        <CreateCasePage />
-                    </DashboardLayout>
-                } />
-                <Route path="/settings" element={
-                    <DashboardLayout>
-                        <SettingsPage />
-                    </DashboardLayout>
-                } />
-                <Route path="/analytics" element={
-                    <DashboardLayout>
-                        <AnalyticsDashboard />
-                    </DashboardLayout>
-                } />
-                <Route path="/profile" element={
-                    <DashboardLayout>
-                        <ProfilePage />
-                    </DashboardLayout>
-                } />
+                    {/* Dashboard Routes */}
+                    <Route path="/dashboard" element={
+                        <DashboardLayout>
+                            <AnalyticsDashboard />
+                        </DashboardLayout>
+                    } />
+                    <Route path="/cases" element={
+                        <DashboardLayout>
+                            <CaseManagement />
+                        </DashboardLayout>
+                    } />
+                    <Route path="/cases/new" element={
+                        <DashboardLayout>
+                            <CreateCasePage />
+                        </DashboardLayout>
+                    } />
+                    <Route path="/settings" element={
+                        <DashboardLayout>
+                            <SettingsPage />
+                        </DashboardLayout>
+                    } />
+                    <Route path="/analytics" element={
+                        <DashboardLayout>
+                            <AnalyticsDashboard />
+                        </DashboardLayout>
+                    } />
+                    <Route path="/profile" element={
+                        <DashboardLayout>
+                            <ProfilePage />
+                        </DashboardLayout>
+                    } />
 
-                {/* Catch all */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-        </Router>
+                    {/* Catch all */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
+            </Router>
+        </UserProvider>
     );
 }
 

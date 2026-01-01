@@ -9,7 +9,7 @@ interface UserProfile {
     email: string;
     full_name: string;
     role: string;
-    created_at: string;
+    created_at?: string;
 }
 
 const ProfilePage: React.FC = () => {
